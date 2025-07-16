@@ -12,8 +12,6 @@ services:
     ports:
       - 127.0.0.1:8123:8123
       - 127.0.0.1:9000:9000
-    depends_on:
-      - postgres
 
   minio:
     image: docker.io/minio/minio
@@ -43,27 +41,8 @@ services:
     ports:
       - 127.0.0.1:6379:6379
 
-  postgres:
-    image: docker.io/postgres:${POSTGRES_VERSION:-latest}
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
-    command: ["postgres", "-c", "log_statement=all"]
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-    ports:
-      - 127.0.0.1:5432:5432
-    volumes:
-      - langfuse_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  langfuse_postgres_data:
-    driver: local
   langfuse_clickhouse_data:
     driver: local
   langfuse_clickhouse_logs:
